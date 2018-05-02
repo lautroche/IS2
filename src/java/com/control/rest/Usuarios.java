@@ -6,24 +6,21 @@
 package com.control.rest;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author padagoal
+ * @author Marcos Trinidad
  */
 @Entity
 @Table(name = "usuarios")
@@ -42,10 +39,10 @@ public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id_usuario")
-    private Integer idUsuario;
+    private Long idUsuario;
     @Column(name = "es_cliente")
     private Boolean esCliente;
     @Size(max = 2147483647)
@@ -65,23 +62,19 @@ public class Usuarios implements Serializable {
     private String passwordUser;
     @Column(name = "modifcar_password")
     private Boolean modifcarPassword;
-    @ManyToMany(mappedBy = "usuariosCollection")
-    private Collection<EquipoTrabajo> equipoTrabajoCollection;
-    @OneToMany(mappedBy = "idCliente")
-    private Collection<Proyecto> proyectoCollection;
 
     public Usuarios() {
     }
 
-    public Usuarios(Integer idUsuario) {
+    public Usuarios(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public Integer getIdUsuario() {
+    public Long getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(Integer idUsuario) {
+    public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
 
@@ -139,24 +132,6 @@ public class Usuarios implements Serializable {
 
     public void setModifcarPassword(Boolean modifcarPassword) {
         this.modifcarPassword = modifcarPassword;
-    }
-
-    @XmlTransient
-    public Collection<EquipoTrabajo> getEquipoTrabajoCollection() {
-        return equipoTrabajoCollection;
-    }
-
-    public void setEquipoTrabajoCollection(Collection<EquipoTrabajo> equipoTrabajoCollection) {
-        this.equipoTrabajoCollection = equipoTrabajoCollection;
-    }
-
-    @XmlTransient
-    public Collection<Proyecto> getProyectoCollection() {
-        return proyectoCollection;
-    }
-
-    public void setProyectoCollection(Collection<Proyecto> proyectoCollection) {
-        this.proyectoCollection = proyectoCollection;
     }
 
     @Override
