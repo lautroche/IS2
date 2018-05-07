@@ -7,4 +7,7 @@ En la carpeta Documentos, se encuentra Los Product Backlog / DER / Matriz de Res
 En la carpeta Databases se encuentra el backup de la base de datos,
 
 
-FUNCIONA CON APACHE! NO GLASSFISH!!
+ENTREGA 6/03/18
+La tarea se encuentra en el BRANCH new.
+
+El backup de la base de datos se encuentra en la carpeta backup del branch
