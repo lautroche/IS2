@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  *
- * @author padagoal
+ * @author emax
  */
 @Stateless
 @Path("com.control.rest.equipotrabajo")

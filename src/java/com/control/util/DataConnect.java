@@ -19,7 +19,7 @@ public class DataConnect {
 			Class.forName("org.postgresql.Driver");
 			Connection con = DriverManager.getConnection(
 					"jdbc:postgresql://localhost:5432/is2", 
-                                "postgres", "");
+                                "postgres", "postgres");
 			return con;
 		} catch (Exception ex) {
 			System.out.println("Database.getConnection() Error -->"

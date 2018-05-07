@@ -6,17 +6,21 @@
 package com.control.rest;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,6 +40,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Usuarios.findByPasswordUser", query = "SELECT u FROM Usuarios u WHERE u.passwordUser = :passwordUser")
     , @NamedQuery(name = "Usuarios.findByModifcarPassword", query = "SELECT u FROM Usuarios u WHERE u.modifcarPassword = :modifcarPassword")})
 public class Usuarios implements Serializable {
+
+    @ManyToMany(mappedBy = "usuariosCollection")
+    private Collection<EquipoTrabajo> equipoTrabajoCollection;
+    @OneToMany(mappedBy = "idUsuario")
+    private Collection<Tarea> tareaCollection;
+    @OneToMany(mappedBy = "idCliente")
+    private Collection<Proyecto> proyectoCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -157,6 +168,33 @@ public class Usuarios implements Serializable {
     @Override
     public String toString() {
         return "com.control.rest.Usuarios[ idUsuario=" + idUsuario + " ]";
+    }
+
+    @XmlTransient
+    public Collection<EquipoTrabajo> getEquipoTrabajoCollection() {
+        return equipoTrabajoCollection;
+    }
+
+    public void setEquipoTrabajoCollection(Collection<EquipoTrabajo> equipoTrabajoCollection) {
+        this.equipoTrabajoCollection = equipoTrabajoCollection;
+    }
+
+    @XmlTransient
+    public Collection<Tarea> getTareaCollection() {
+        return tareaCollection;
+    }
+
+    public void setTareaCollection(Collection<Tarea> tareaCollection) {
+        this.tareaCollection = tareaCollection;
+    }
+
+    @XmlTransient
+    public Collection<Proyecto> getProyectoCollection() {
+        return proyectoCollection;
+    }
+
+    public void setProyectoCollection(Collection<Proyecto> proyectoCollection) {
+        this.proyectoCollection = proyectoCollection;
     }
     
 }

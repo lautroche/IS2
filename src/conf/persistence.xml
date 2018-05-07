@@ -2,7 +2,16 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="Control_NPU" transaction-type="JTA">
     <jta-data-source>java:app/postgres_is2</jta-data-source>
+    <class>com.control.rest.EquipoTrabajo</class>
+    <class>com.control.rest.HistoricoAcciones</class>
+    <class>com.control.rest.Permisos</class>
+    <class>com.control.rest.ProductBacklog</class>
+    <class>com.control.rest.Proyecto</class>
+    <class>com.control.rest.Rol</class>
+    <class>com.control.rest.Sprint</class>
+    <class>com.control.rest.Usuarios</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <properties/>
+    <properties>
+    </properties>
   </persistence-unit>
 </persistence>

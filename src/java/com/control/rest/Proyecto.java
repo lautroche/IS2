@@ -41,6 +41,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Proyecto.findByAnhoProyecto", query = "SELECT p FROM Proyecto p WHERE p.anhoProyecto = :anhoProyecto")})
 public class Proyecto implements Serializable {
 
+    @OneToMany(mappedBy = "idProyecto")
+    private Collection<Tarea> tareaCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -163,6 +166,15 @@ public class Proyecto implements Serializable {
     @Override
     public String toString() {
         return "com.control.rest.Proyecto[ idProyecto=" + idProyecto + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Tarea> getTareaCollection() {
+        return tareaCollection;
+    }
+
+    public void setTareaCollection(Collection<Tarea> tareaCollection) {
+        this.tareaCollection = tareaCollection;
     }
     
 }

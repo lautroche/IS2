@@ -36,7 +36,8 @@ public class ApplicationConfig extends Application {
         resources.add(com.control.rest.service.ProyectoFacadeREST.class);
         resources.add(com.control.rest.service.RolFacadeREST.class);
         resources.add(com.control.rest.service.SprintFacadeREST.class);
-        resources.add(service.UsuariosFacadeREST.class);
+        resources.add(com.control.rest.service.TareaFacadeREST.class);
+        resources.add(com.control.rest.service.UsuariosFacadeREST.class);
     }
     
 }
