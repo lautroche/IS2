@@ -83,9 +83,24 @@ public class TareaFacadeREST extends AbstractFacade<Tarea> {
         return String.valueOf(super.count());
     }
 
+    @GET
+    @Path("/byCode/{code}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Tarea> byCode(@PathParam("code") String code) {
+        List<Tarea> tareas = super.findAll();
+
+        for (int j = tareas.size() - 1; j >= 0; j--) {
+            if (!tareas.get(j).getIdUsuario().getCodigoUser().equals(code)) {
+                tareas.remove(j);
+            }
+        }
+
+        return tareas;
+    }
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = { "*.xhtml" })
+@WebFilter(filterName = "AuthFilter", urlPatterns = { "/*" })
 public class AuthorizationFilter implements Filter {
 
 	public AuthorizationFilter() {
@@ -41,16 +41,16 @@ public class AuthorizationFilter implements Filter {
 			HttpServletResponse resp = (HttpServletResponse) response;
 			HttpSession ses = reqt.getSession(false);
 
-			String reqURI = reqt.getRequestURI();
-			if (reqURI.indexOf("/login.xhtml") >= 0
-					|| (ses != null && ses.getAttribute("username") != null)
-					|| reqURI.indexOf("/public/") >= 0
-					|| reqURI.contains("javax.faces.resource"))
+			/*String reqURI = reqt.getRequestURI();
+			if (reqURI.indexOf("/index.jsp") >= 0
+					|| reqURI.indexOf("/IS2/ValidarServlet") >= 0
+                              ||   (ses != null && ses.getAttribute("usuario") != null))*/
 				chain.doFilter(request, response);
-			else
-				resp.sendRedirect(reqt.getContextPath() + "/faces/login.xhtml");
+			/*else
+				  request.getRequestDispatcher("ErrorServlet").forward(request, response);*/
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+                          request.getRequestDispatcher("ErrorServlet").forward(request, response);
 		}
 	}
 
