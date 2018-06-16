@@ -1,0 +1,608 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.4.18
+-- Dumped by pg_dump version 9.4.18
+-- Started on 2018-06-16 17:33:15
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 1 (class 3079 OID 11855)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2095 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 173 (class 1259 OID 24954)
+-- Name: equipo_trabajo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.equipo_trabajo (
+    id_equipo integer NOT NULL,
+    activo character(1),
+    nombre_equipo character varying(255)
+);
+
+
+ALTER TABLE public.equipo_trabajo OWNER TO postgres;
+
+--
+-- TOC entry 184 (class 1259 OID 25026)
+-- Name: equipo_trabajo_x_usuario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.equipo_trabajo_x_usuario (
+    id_equipo integer NOT NULL,
+    id_usuario bigint NOT NULL
+);
+
+
+ALTER TABLE public.equipo_trabajo_x_usuario OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 24959)
+-- Name: historico_acciones; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.historico_acciones (
+    id_historico integer NOT NULL,
+    accion_ejecutada character varying(255),
+    fechahora_accion timestamp without time zone,
+    tabla_afectada character varying(255),
+    usuario_accion character varying(255)
+);
+
+
+ALTER TABLE public.historico_acciones OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 24967)
+-- Name: permisos; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.permisos (
+    id_permiso integer NOT NULL,
+    activo character(1),
+    descripcion_permiso character varying(255),
+    nombre_permiso character varying(255)
+);
+
+
+ALTER TABLE public.permisos OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 24975)
+-- Name: product_backlog; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.product_backlog (
+    id_product_backlog integer NOT NULL,
+    alias character varying(255),
+    comentarios character varying(255),
+    enunciado character varying(255),
+    estado character(1),
+    prioridad character varying(255),
+    id_proyecto integer
+);
+
+
+ALTER TABLE public.product_backlog OWNER TO postgres;
+
+--
+-- TOC entry 177 (class 1259 OID 24983)
+-- Name: proyecto; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.proyecto (
+    id_proyecto integer NOT NULL,
+    anho_proyecto character varying(255),
+    codigo_proyecto character varying(255),
+    fecha_fin date,
+    fecha_incio date,
+    id_cliente bigint,
+    id_equipo_trabajo integer
+);
+
+
+ALTER TABLE public.proyecto OWNER TO postgres;
+
+--
+-- TOC entry 178 (class 1259 OID 24991)
+-- Name: rol; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.rol (
+    id_rol integer NOT NULL,
+    activo character(1),
+    descripcion_rol character varying(255),
+    nombre_rol character varying(255),
+    rol_administrativo character varying(255),
+    rol_proyecto character varying(255)
+);
+
+
+ALTER TABLE public.rol OWNER TO postgres;
+
+--
+-- TOC entry 185 (class 1259 OID 25031)
+-- Name: rol_x_permiso; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.rol_x_permiso (
+    id_permiso integer NOT NULL,
+    id_rol integer NOT NULL
+);
+
+
+ALTER TABLE public.rol_x_permiso OWNER TO postgres;
+
+--
+-- TOC entry 179 (class 1259 OID 24999)
+-- Name: sprint; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.sprint (
+    id_sprint integer NOT NULL,
+    fecha_fin date,
+    fecha_inicio date,
+    id_backlog integer
+);
+
+
+ALTER TABLE public.sprint OWNER TO postgres;
+
+--
+-- TOC entry 183 (class 1259 OID 25017)
+-- Name: tarea; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.tarea (
+    id_tarea integer NOT NULL,
+    descripcion character varying(255),
+    tiempo_estimado character varying(255),
+    id_proyecto integer,
+    id_sprint integer,
+    id_usuario bigint
+);
+
+
+ALTER TABLE public.tarea OWNER TO postgres;
+
+--
+-- TOC entry 182 (class 1259 OID 25015)
+-- Name: tarea_id_tarea_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tarea_id_tarea_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tarea_id_tarea_seq OWNER TO postgres;
+
+--
+-- TOC entry 2096 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: tarea_id_tarea_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tarea_id_tarea_seq OWNED BY public.tarea.id_tarea;
+
+
+--
+-- TOC entry 181 (class 1259 OID 25006)
+-- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.usuarios (
+    id_usuario integer NOT NULL,
+    codigo_user character varying(255),
+    correo_user character varying(255),
+    es_cliente boolean,
+    modifcar_password boolean,
+    nombre_empresa character varying(255),
+    password_user character varying(255),
+    telefono_user character varying(255)
+);
+
+
+ALTER TABLE public.usuarios OWNER TO postgres;
+
+--
+-- TOC entry 180 (class 1259 OID 25004)
+-- Name: usuarios_id_usuario_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.usuarios_id_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.usuarios_id_usuario_seq OWNER TO postgres;
+
+--
+-- TOC entry 2097 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: usuarios_id_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.usuarios_id_usuario_seq OWNED BY public.usuarios.id_usuario;
+
+
+--
+-- TOC entry 1931 (class 2604 OID 25020)
+-- Name: id_tarea; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tarea ALTER COLUMN id_tarea SET DEFAULT nextval('public.tarea_id_tarea_seq'::regclass);
+
+
+--
+-- TOC entry 1930 (class 2604 OID 25009)
+-- Name: id_usuario; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios ALTER COLUMN id_usuario SET DEFAULT nextval('public.usuarios_id_usuario_seq'::regclass);
+
+
+--
+-- TOC entry 2074 (class 0 OID 24954)
+-- Dependencies: 173
+-- Data for Name: equipo_trabajo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.equipo_trabajo VALUES (1, 't', 'admin');
+
+
+--
+-- TOC entry 2085 (class 0 OID 25026)
+-- Dependencies: 184
+-- Data for Name: equipo_trabajo_x_usuario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2075 (class 0 OID 24959)
+-- Dependencies: 174
+-- Data for Name: historico_acciones; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2076 (class 0 OID 24967)
+-- Dependencies: 175
+-- Data for Name: permisos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2077 (class 0 OID 24975)
+-- Dependencies: 176
+-- Data for Name: product_backlog; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.product_backlog VALUES (1, 'nuevo', 'nuevo', 'nuevo', 'a', 'normal', 1);
+INSERT INTO public.product_backlog VALUES (2, 'nuevo', 'nuevo', 'nuevo', 'a', 'normal', 1);
+
+
+--
+-- TOC entry 2078 (class 0 OID 24983)
+-- Dependencies: 177
+-- Data for Name: proyecto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.proyecto VALUES (1, '2018', '1', '2018-05-15', '2018-05-15', 1, 1);
+INSERT INTO public.proyecto VALUES (2, '2018', '1', '2018-05-15', '2018-05-15', 1, 1);
+
+
+--
+-- TOC entry 2079 (class 0 OID 24991)
+-- Dependencies: 178
+-- Data for Name: rol; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2086 (class 0 OID 25031)
+-- Dependencies: 185
+-- Data for Name: rol_x_permiso; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2080 (class 0 OID 24999)
+-- Dependencies: 179
+-- Data for Name: sprint; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.sprint VALUES (1, '2018-06-13', '2018-05-10', 1);
+
+
+--
+-- TOC entry 2084 (class 0 OID 25017)
+-- Dependencies: 183
+-- Data for Name: tarea; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.tarea VALUES (8, 'ok', 'ok', 1, 1, 1);
+INSERT INTO public.tarea VALUES (9, 'nueva', 'nueva', 2, 1, 18);
+
+
+--
+-- TOC entry 2098 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: tarea_id_tarea_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.tarea_id_tarea_seq', 9, true);
+
+
+--
+-- TOC entry 2082 (class 0 OID 25006)
+-- Dependencies: 181
+-- Data for Name: usuarios; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.usuarios VALUES (1, 'admin', 'admin', true, true, 'admin', 'admin', '123456789');
+INSERT INTO public.usuarios VALUES (18, 'ok', 'ok@gmail.com', NULL, true, 'ok', 'admin', '669989');
+
+
+--
+-- TOC entry 2099 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: usuarios_id_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.usuarios_id_usuario_seq', 18, true);
+
+
+--
+-- TOC entry 1933 (class 2606 OID 24958)
+-- Name: equipo_trabajo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.equipo_trabajo
+    ADD CONSTRAINT equipo_trabajo_pkey PRIMARY KEY (id_equipo);
+
+
+--
+-- TOC entry 1951 (class 2606 OID 25030)
+-- Name: equipo_trabajo_x_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.equipo_trabajo_x_usuario
+    ADD CONSTRAINT equipo_trabajo_x_usuario_pkey PRIMARY KEY (id_equipo, id_usuario);
+
+
+--
+-- TOC entry 1935 (class 2606 OID 24966)
+-- Name: historico_acciones_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.historico_acciones
+    ADD CONSTRAINT historico_acciones_pkey PRIMARY KEY (id_historico);
+
+
+--
+-- TOC entry 1937 (class 2606 OID 24974)
+-- Name: permisos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.permisos
+    ADD CONSTRAINT permisos_pkey PRIMARY KEY (id_permiso);
+
+
+--
+-- TOC entry 1939 (class 2606 OID 24982)
+-- Name: product_backlog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.product_backlog
+    ADD CONSTRAINT product_backlog_pkey PRIMARY KEY (id_product_backlog);
+
+
+--
+-- TOC entry 1941 (class 2606 OID 24990)
+-- Name: proyecto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.proyecto
+    ADD CONSTRAINT proyecto_pkey PRIMARY KEY (id_proyecto);
+
+
+--
+-- TOC entry 1943 (class 2606 OID 24998)
+-- Name: rol_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.rol
+    ADD CONSTRAINT rol_pkey PRIMARY KEY (id_rol);
+
+
+--
+-- TOC entry 1953 (class 2606 OID 25035)
+-- Name: rol_x_permiso_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.rol_x_permiso
+    ADD CONSTRAINT rol_x_permiso_pkey PRIMARY KEY (id_permiso, id_rol);
+
+
+--
+-- TOC entry 1945 (class 2606 OID 25003)
+-- Name: sprint_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.sprint
+    ADD CONSTRAINT sprint_pkey PRIMARY KEY (id_sprint);
+
+
+--
+-- TOC entry 1949 (class 2606 OID 25025)
+-- Name: tarea_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.tarea
+    ADD CONSTRAINT tarea_pkey PRIMARY KEY (id_tarea);
+
+
+--
+-- TOC entry 1947 (class 2606 OID 25014)
+-- Name: usuarios_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_pkey PRIMARY KEY (id_usuario);
+
+
+--
+-- TOC entry 1962 (class 2606 OID 25076)
+-- Name: fk_equipo_trabajo_x_usuario_id_equipo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipo_trabajo_x_usuario
+    ADD CONSTRAINT fk_equipo_trabajo_x_usuario_id_equipo FOREIGN KEY (id_equipo) REFERENCES public.equipo_trabajo(id_equipo);
+
+
+--
+-- TOC entry 1961 (class 2606 OID 25071)
+-- Name: fk_equipo_trabajo_x_usuario_id_usuario; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipo_trabajo_x_usuario
+    ADD CONSTRAINT fk_equipo_trabajo_x_usuario_id_usuario FOREIGN KEY (id_usuario) REFERENCES public.usuarios(id_usuario);
+
+
+--
+-- TOC entry 1954 (class 2606 OID 25036)
+-- Name: fk_product_backlog_id_proyecto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_backlog
+    ADD CONSTRAINT fk_product_backlog_id_proyecto FOREIGN KEY (id_proyecto) REFERENCES public.proyecto(id_proyecto);
+
+
+--
+-- TOC entry 1956 (class 2606 OID 25046)
+-- Name: fk_proyecto_id_cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.proyecto
+    ADD CONSTRAINT fk_proyecto_id_cliente FOREIGN KEY (id_cliente) REFERENCES public.usuarios(id_usuario);
+
+
+--
+-- TOC entry 1955 (class 2606 OID 25041)
+-- Name: fk_proyecto_id_equipo_trabajo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.proyecto
+    ADD CONSTRAINT fk_proyecto_id_equipo_trabajo FOREIGN KEY (id_equipo_trabajo) REFERENCES public.equipo_trabajo(id_equipo);
+
+
+--
+-- TOC entry 1964 (class 2606 OID 25086)
+-- Name: fk_rol_x_permiso_id_permiso; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.rol_x_permiso
+    ADD CONSTRAINT fk_rol_x_permiso_id_permiso FOREIGN KEY (id_permiso) REFERENCES public.permisos(id_permiso);
+
+
+--
+-- TOC entry 1963 (class 2606 OID 25081)
+-- Name: fk_rol_x_permiso_id_rol; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.rol_x_permiso
+    ADD CONSTRAINT fk_rol_x_permiso_id_rol FOREIGN KEY (id_rol) REFERENCES public.rol(id_rol);
+
+
+--
+-- TOC entry 1957 (class 2606 OID 25051)
+-- Name: fk_sprint_id_backlog; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sprint
+    ADD CONSTRAINT fk_sprint_id_backlog FOREIGN KEY (id_backlog) REFERENCES public.product_backlog(id_product_backlog);
+
+
+--
+-- TOC entry 1958 (class 2606 OID 25056)
+-- Name: fk_tarea_id_proyecto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tarea
+    ADD CONSTRAINT fk_tarea_id_proyecto FOREIGN KEY (id_proyecto) REFERENCES public.proyecto(id_proyecto);
+
+
+--
+-- TOC entry 1960 (class 2606 OID 25066)
+-- Name: fk_tarea_id_sprint; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tarea
+    ADD CONSTRAINT fk_tarea_id_sprint FOREIGN KEY (id_sprint) REFERENCES public.sprint(id_sprint);
+
+
+--
+-- TOC entry 1959 (class 2606 OID 25061)
+-- Name: fk_tarea_id_usuario; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tarea
+    ADD CONSTRAINT fk_tarea_id_usuario FOREIGN KEY (id_usuario) REFERENCES public.usuarios(id_usuario);
+
+
+--
+-- TOC entry 2094 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2018-06-16 17:33:15
+
+--
+-- PostgreSQL database dump complete
+--
+
